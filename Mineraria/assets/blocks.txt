@@ -1,0 +1,11 @@
+1 stone.png
+2 grass_block_side.png
+3 dirt.png
+5 oak_planks.png
+7 bedrock.png
+14 gold_ore.png
+15 iron_ore.png
+16 coal_ore.png
+17 oak_log.png
+58 crafting_table_front.png
+61 furnace_front.png

@@ -6,13 +6,15 @@ class Chunk
 {
 private:
 	int x;
-	Block blocks[32][320];
+	int seed;
 public:
-	Chunk(int position_x);
+	Block blocks[32][320];
+	Chunk(int position_x, int seed);
 	~Chunk() = default;
-	void setBlock(short ID, int x, int y);
+	void setBlock(int x, int y, short ID);
 	short getBlockID(int x, int y);
 	short getChunkX();
+	int getSeed();
 	Block& block(int x, int y);
 };
 

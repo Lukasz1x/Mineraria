@@ -4,46 +4,167 @@ World::World(string name, int seed)
 {
 	world_name = name;
 	this->seed = seed;
-	for (int i = -2; i <= -1; i++)
+	ifstream file("assets/blocks.txt");
+	int id;
+	string texture_png;
+	while (file >> id)
 	{
-		chunks.emplace_back(i);
+		file >> texture_png;
+		textures.emplace_back(id, texture_png);
 	}
-	WorldGenerator generator(seed);
+	
+	if (!std::filesystem::exists("saves/" + world_name))
+	{
+		std::filesystem::create_directory("saves/" + world_name);
+		createNewWorld();
+	}
+	else
+	{
+		load(0);
+	}
+}
+
+	
+void World::createNewWorld()
+{
+	unsigned int numThreads = std::thread::hardware_concurrency();
+	numThreads = std::min(numThreads, static_cast<unsigned int>(chunks.size()));
+	std::vector<std::thread> threads;
+	for (int i = -10; i <= 10; i++)
+	{
+		chunks.emplace_back(i, seed);
+	}
+	for (size_t i = 0; i < chunks.size(); ++i)
+	{
+		// Utwórz w¹tek dla ka¿dego chunka
+		auto generateThread = [this, i]() {
+			this->generate(chunks[i]);
+			};
+
+		// Dodaj w¹tek do wektora
+		threads.emplace_back(generateThread);
+
+		// Jeœli osi¹gniêto maksymaln¹ liczbê w¹tków, poczekaj, a¿ jeden zakoñczy siê
+		if (threads.size() >= numThreads)
+		{
+			for (auto& thread : threads)
+			{
+				thread.join();
+			}
+			threads.clear();
+		}
+	}
+
+	// Poczekaj na pozosta³e w¹tki
+	for (auto& thread : threads)
+	{
+		thread.join();
+	}
 	for (auto& chunk : chunks)
 	{
-		cout << chunk.getChunkX() << endl;
-;		generator.generate(chunk);
-		save(chunk);
+		setTextures(chunk);
 	}
-	
-	
+}
+
+void World::generate(Chunk& ch)
+{
+	cout << ch.getChunkX() << endl;
+	generator.generate(ch);
+	save(ch);
+}
+
+void World::setTextures(Chunk& ch)
+{
+	int chunk_x = ch.getChunkX();
+	for (int y = 0; y < 320; y++)
+	{
+		for (int x = 0; x < 32; x++)
+		{
+			if ((ch.getBlockID(x + chunk_x * 32, y) != 0))
+			{
+				for (auto& texture : textures)
+				{
+					if ((ch.getBlockID(x + chunk_x * 32, y) == texture.getID()))
+					{
+						ch.blocks[x][y].setTextture(texture.getTexture());
+					}
+				}
+			}
+		}
+	}
 }
 
 void World::save(Chunk& ch)
 {
-	if (!std::filesystem::exists("saves/" + world_name))
-	{
-		std::filesystem::create_directory("saves/" + world_name);
-	}
+	int chunk_x = ch.getChunkX();
     ofstream file("saves/"+world_name+"/"+to_string(ch.getChunkX())+".txt", ios::out);
 	for (int y = 0; y < 320; y++)
 	{
 		for (int x = 0; x < 32; x++)
 		{
-			file << ch.getBlockID(x, y) << " ";
+			file << ch.getBlockID(x + chunk_x * 32, y) << " ";
 		}
 		file << endl;
 	}
 	file.close();
 
 }
-void World::load()
+void World::load(int chunk_x)
 {
+	for (int i = chunk_x - 10; i <= chunk_x + 10; i++)
+	{
+		bool found = 0;
+		for (auto& chunk : chunks)
+		{
+			if (i == chunk.getChunkX())
+			{
+				found = true;
+			}
+		}
+		if (!found)
+		{
+			chunks.emplace_back(i, seed);
+			std::ifstream file("saves/" + world_name + "/" + to_string(i) + ".txt");
 
+			// Sprawdzenie, czy plik istnieje
+			if (file.is_open()) 
+			{
+				int chunk_x = chunks.back().getChunkX();
+				int temp;
+				for (int y = 0; y < 320; y++)
+				{
+					for (int x = 0; x < 32; x++)
+					{
+						file >> temp;
+						chunks.back().setBlock(x + chunk_x * 32, y, temp);
+					}
+					
+				}
+			}
+			else 
+			{
+				generate(chunks.back());
+			}
+			setTextures(chunks.back());
+		}
+		
+	}
 }
-void World::unload()
-{
 
+void World::unload(int chunk_x)
+{
+	for (auto it = chunks.begin(); it != chunks.end(); )
+	{
+		if ((it->getChunkX() > chunk_x + 20) || (it->getChunkX() < chunk_x - 20))
+		{
+			save(*it);
+			it = chunks.erase(it);  // Usuñ obiekt i uzyskaj iterator do nastêpnego elementu
+		}
+		else
+		{
+			++it;  // PrzejdŸ do nastêpnego elementu
+		}
+	}
 }
 
 vector<Chunk>& World::getChunks()

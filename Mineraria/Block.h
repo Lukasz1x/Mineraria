@@ -12,10 +12,11 @@ private:
 	RectangleShape block;
 	void draw(RenderTarget& target, RenderStates state) const override;
 public:
-	Block() = default;
+	Block();
 	~Block() = default;
 
-	void setBlock(int x, int y, short Id=0);
+	void setBlock(int x, int y, short Id);
+	void setTextture(Texture& texture);
 	short getBlockID();
 };
 
