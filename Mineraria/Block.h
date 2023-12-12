@@ -18,5 +18,8 @@ public:
 	void setBlock(int x, int y, short Id);
 	void setTextture(Texture& texture);
 	short getBlockID();
+	void select();
+	void unselect();
+	void breakBlock();
 };
 

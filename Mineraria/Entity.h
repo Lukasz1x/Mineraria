@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <iostream>
 
 using namespace sf;
 
@@ -20,7 +21,8 @@ public:
 	void setPosition(Vector2f pos);
 	Vector2f getPosition();
 	void applyGravity();
-	void updatePosition();
+	void updatePosition(int top, int down, int left, int right);
+	FloatRect getHitBox();
 
 };
 

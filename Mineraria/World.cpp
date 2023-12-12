@@ -172,3 +172,86 @@ vector<Chunk>& World::getChunks()
 	return chunks;
 }
 
+
+void convert(int& x, int& y, int &chunk_x)
+{
+	chunk_x = x / 512;
+	if (x < 0)
+	{
+		chunk_x--;
+		if (x%512==0)
+		{
+			chunk_x++;
+			x = 0;
+		}
+	}
+	while (x < 0)
+	{
+		x += (32 * 16);
+	}
+	while (x >= 512)
+	{
+		x -= (32 * 16);
+	}
+	if (y < 0)
+	{
+		y = 0; //bo nie wiadomo dlaczego myszka czasami ma ujemne kordy 
+	}
+	x /= 16;
+	y /= 16;
+}
+
+short World::getBlockID(int x, int y)
+{
+	int chunk_x;
+	convert(x, y, chunk_x);
+
+	for (auto& chunk : chunks)
+	{
+		if (chunk.getChunkX() == chunk_x)
+		{
+			return chunk.getBlockID_PX(x, y);
+		}
+	}
+}
+
+void World::selectBlock(int x, int y)
+{
+	int chunk_x;
+	convert(x, y, chunk_x);
+
+	//cout << "world " << x << " " << y <<" "<<chunk_x<< endl;
+	for (auto& chunk : chunks)
+	{
+		if (chunk.getChunkX() == chunk_x)
+		{
+			chunk.selectBlock(x, y);
+		}
+	}
+}
+
+void World::unselectBlock(int x, int y)
+{
+	int chunk_x;
+	convert(x, y, chunk_x);
+	for (auto& chunk : chunks)
+	{
+		if (chunk.getChunkX() == chunk_x)
+		{
+			chunk.unselectBlock(x, y);
+		}
+	}
+}
+
+void World::breakBlock(int x, int y)
+{
+	int chunk_x;
+	convert(x, y, chunk_x);
+	for (auto& chunk : chunks)
+	{
+		if (chunk.getChunkX() == chunk_x)
+		{
+			chunk.breakBlock(x, y);
+		}
+	}
+}

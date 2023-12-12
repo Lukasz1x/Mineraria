@@ -13,8 +13,12 @@ public:
 	~Chunk() = default;
 	void setBlock(int x, int y, short ID);
 	short getBlockID(int x, int y);
+	short getBlockID_PX(int x, int y);
+	void selectBlock(int x, int y);
+	void unselectBlock(int x, int y);
 	short getChunkX();
 	int getSeed();
+	void breakBlock(int x, int y);
 	Block& block(int x, int y);
 };
 

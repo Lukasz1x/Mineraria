@@ -8,8 +8,6 @@ public:
 	Player();
 	~Player() = default;
 	Vector2f getCenter();
-	void move_left();
-	void move_right();
 	
 };
 

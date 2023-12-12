@@ -29,6 +29,10 @@ public:
 	void unload(int chunk_x);
 	void setTextures(Chunk& ch);
 	void createNewWorld();
+	void selectBlock(int x, int y);
+	void unselectBlock(int x, int y);
+	short getBlockID(int x, int y);
+	void breakBlock(int x, int y);
 	vector<Chunk>& getChunks();
 };
 
