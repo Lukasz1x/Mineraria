@@ -39,25 +39,38 @@ void Entity::applyGravity()
 void Entity::updatePosition(int top, int down, int left, int right)
 {
 	Vector2f pos = getPosition();
-	if ((entity.getGlobalBounds().top + entity.getGlobalBounds().height + velocity.y * 0.025) >= down)
+	if ((pos.y + entity.getGlobalBounds().height + velocity.y * 0.025) > down)
 	{
+		if (velocity.y > 100)
+		{
+			health -= velocity.y / 8;
+		}
 		velocity.y = 0;
+		//pos.y = down - entity.getGlobalBounds().height-1;
 	}
-	if (entity.getGlobalBounds().top + velocity.y * 0.025 < top)
+	else
 	{
-		velocity.y = 0;
+		applyGravity();
+	}
+	if (pos.y + velocity.y * 0.025 < top)
+	{
+		velocity.y *=-0.25;
+		//pos.y = top+1;
 	}
 	if (entity.getGlobalBounds().left + velocity.x * 0.025 < left)
 	{
-		std::cout << entity.getGlobalBounds().left + velocity.x * 0.025 << std::endl;
 		velocity.x = 0;
-	}
-	if (entity.getGlobalBounds().left + entity.getGlobalBounds().width + velocity.x * 0.025 > right)
+		//pos.x = left+1;
+	}else if (entity.getGlobalBounds().left + entity.getGlobalBounds().width + velocity.x * 0.025 > right)
 	{
-		std::cout << entity.getGlobalBounds().left + entity.getGlobalBounds().width + velocity.x * 0.025 << std::endl;
 		velocity.x = 0;
+		//pos.x = right - entity.getGlobalBounds().width-1;
 	}
-	pos.x = pos.x + velocity.x * 0.025;
+	else
+	{
+		pos.x = pos.x + velocity.x * 0.025;
+	}
+
 	pos.y = pos.y + velocity.y * 0.025;
 
 	entity.setPosition(pos);

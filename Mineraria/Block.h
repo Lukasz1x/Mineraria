@@ -11,6 +11,7 @@ private:
 	short ID;
 	RectangleShape block;
 	void draw(RenderTarget& target, RenderStates state) const override;
+	int hardness;
 public:
 	Block();
 	~Block() = default;

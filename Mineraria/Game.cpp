@@ -44,40 +44,37 @@ void check_colisions(World& world, int& top, int& down, int& left, int& right, F
 	{
 		for (int y = top; y <= loop2; y += 16)
 		{
-			//cout << "Kolizje petla " << x << " " << y << endl;
 			if (world.getBlockID(x, y) != 0)
 			{
-				FloatRect d(position.left, position.top - 32, position.width, position.height + 64);
-				if (d.intersects(FloatRect(x, y, 16, 16)) &&  (y >=  position.top+position.height))
+				FloatRect check_y = position;
+				check_y.top -= 50;
+				check_y.height += 100;
+				check_y.left += 0.5;
+				check_y.width -= 1;
+				if (check_y.intersects(FloatRect(x-0.5, y-0.5, 17, 17)))
 				{
-					if (y < down)
+					if ((y >= position.top + (position.height/3)) && (y < down))
 					{
-						
 						down = y;
 					}
-				}
-				if (d.intersects(FloatRect(x, y, 16, 16)) && (y <= position.top))
-				{
-					if (y > top)
+					if ((y <= position.top+(position.height / 3)) && (y > top))
 					{
-
 						top = y;
 					}
 				}
-				FloatRect l(position.left - 32, position.top, position.width + 64, position.height);
-				if (l.intersects(FloatRect(x, y, 16, 16)) && (x >= position.left + position.width))
+				FloatRect check_x = position;
+				check_x.left -= 50;
+				check_x.width += 100;
+				check_x.top += 0.5;
+				check_x.height -= 1;
+				if (check_x.intersects(FloatRect(x, y, 16, 16)))
 				{
-					if (x < right)
+					if ((x >= position.left + (position.width/3)) && (x < right))
 					{
-
 						right = x;
 					}
-				}
-				if (l.intersects(FloatRect(x, y, 16, 16)) && (x <= position.left))
-				{
-					if (x > left)
+					if ((x <= position.left + (position.width / 3)) && (x > left))
 					{
-
 						left = x;
 					}
 				}
@@ -90,7 +87,7 @@ void check_colisions(World& world, int& top, int& down, int& left, int& right, F
 
 void Game::update(World& world)
 {
-	chrono::milliseconds interval(25);
+	chrono::milliseconds interval(25);//ma byæ 25
 	auto startTime = std::chrono::steady_clock::now();
 	int top, down, left, right;
 	while (window.isOpen())
@@ -100,17 +97,20 @@ void Game::update(World& world)
 		//check_colisions(world, top, down, left, right, player.getHitBox());
 		if (elapsedTime >= interval)
 		{
-			player.applyGravity();
+			
 			check_colisions(world, top, down, left, right, player.getHitBox());
 			player.updatePosition(top, down, left, right);
+			player.update();
 			startTime = std::chrono::steady_clock::now();
 		}
 	}
 }
 
-void Game::cursor(World& world)
+void Game::controls(World& world)
 {
 	Vector2i selected = Vector2i(0, 0);
+	sf::Clock breakBlockClock;
+	bool isMousePressed = false;
 	while (window.isOpen())
 	{
 		Vector2i mouse = Mouse::getPosition(window);
@@ -127,7 +127,7 @@ void Game::cursor(World& world)
 				FloatRect block(x, y, 16, 16);
 				if (block.contains(worldMouse))
 				{
-					cout <<"petla "<< x << " " << y << endl;
+					//cout <<"petla "<< x << " " << y << endl;
 					world.selectBlock(x, y);
 					if (selected!=Vector2i(x,y))
 					{
@@ -138,9 +138,40 @@ void Game::cursor(World& world)
 				}
 			}
 		}
-		if (Mouse::isButtonPressed(Mouse::Left))
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			world.breakBlock(selected.x, selected.y);
+			if (!isMousePressed)
+			{
+				breakBlockClock.restart();
+				isMousePressed = true;
+			}
+
+			if (breakBlockClock.getElapsedTime().asSeconds() >= 1.0f) // 1.0f to czas w sekundach
+			{
+				world.breakBlock(selected.x, selected.y);
+				breakBlockClock.restart();
+			}
+		}
+		else
+		{
+			isMousePressed = false;
+		}
+		if (Keyboard::isKeyPressed(sf::Keyboard::Space))
+		{
+			if(player.getVelocity().y==0)
+				player.setVelocity(Vector2f(0, -100));
+		}
+		if (Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
+			player.setVelocity(Vector2f(80, player.getVelocity().y));
+		}
+		else if (Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			player.setVelocity(Vector2f(-80, player.getVelocity().y));
+		}
+		else
+		{
+			player.setVelocity(Vector2f(0, player.getVelocity().y));
 		}
 	}
 }
@@ -148,6 +179,7 @@ void Game::cursor(World& world)
 int Game::run()
 {
 	View main_view(FloatRect(0, 0, game_settings.getWindowWidth()/2, game_settings.getWindowHeight()/2));
+	View gui(FloatRect(0, 0, game_settings.getWindowWidth(), game_settings.getWindowHeight()));
 	load();
 	window.setView(main_view);
 	World world("New World", 123);
@@ -155,36 +187,25 @@ int Game::run()
 	//t.detach();
 	thread update_thread(&Game::update, this, ref(world));
 	update_thread.detach();
-	thread cursor_thread(&Game::cursor, this, ref(world));
-	cursor_thread.detach();
+	thread controls_thread(&Game::controls, this, ref(world));
+	controls_thread.detach();
 	
 
 	while (window.isOpen())
 	{
-
-		if (Keyboard::isKeyPressed(sf::Keyboard::Space))
-		{
-			player.setVelocity(Vector2f(0, -100));
-			}
-		if (Keyboard::isKeyPressed(sf::Keyboard::Right))
-		{
-			player.setVelocity(Vector2f(80, player.getVelocity().y));
-			}
-		else if (Keyboard::isKeyPressed(sf::Keyboard::Left))
-		{
-			player.setVelocity(Vector2f(-80, player.getVelocity().y));
-
-		}
-		else
-		{
-			player.setVelocity(Vector2f(0, player.getVelocity().y));
-		}
 		Event event;
 		while (window.pollEvent(event))
 		{
 
 			if (event.type == Event::Closed)
+			{
+				for (auto& chunk : world.getChunks())
+				{
+					world.save(chunk);
+				}
 				window.close();
+
+			}
 			else if ((event.type == Event::KeyPressed) && (event.key.code == Keyboard::Subtract))
 			{
 				if (zoom > 1)
@@ -233,6 +254,8 @@ int Game::run()
 			}
 		}
 		window.draw(player);
+		window.setView(gui);
+		window.draw(player.draw_inv());
 		window.display();
 
 

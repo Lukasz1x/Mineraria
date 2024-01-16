@@ -21,7 +21,7 @@ private:
 	void load();
 	void load_unload(World& world);
 	void update(World& world);
-	void cursor(World& world);
+	void controls(World& world);
 	short zoom = 2;
 public:
 	Game(RenderWindow& window, GameSettings& game_settings);

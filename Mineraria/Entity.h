@@ -10,7 +10,7 @@ class Entity : public Drawable
 protected:
 	void draw(RenderTarget& target, RenderStates state) const override;
 	RectangleShape entity;
-	int health, max_health;
+	float health, max_health;
 	Texture entity_texture;
 	Vector2f velocity = Vector2f(0.0f, 0.0f);
 	Entity();
