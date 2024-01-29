@@ -1,19 +1,22 @@
 #pragma once
 
 #include "Entity.h";
-#include "Inventory.h"
+#include "Gui.h"
 #include "GameSettings.h"
 
 class Player : public Entity
 {
 private:
-	Inventory* inv;
+	Gui* gui;
+	GameSettings* game_settings;
+
 
 public:
-	Player();
+	Player(GameSettings* gs);
 	~Player() = default;
+	void respawn();
 	Vector2f getCenter();
-	Inventory draw_inv();
+	Gui draw_gui();
 	void update();
 	
 };

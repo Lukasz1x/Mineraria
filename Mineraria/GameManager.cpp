@@ -1,11 +1,12 @@
 #include "GameManager.h"
 
-GameManager::GameManager(sf::RenderWindow& window, GameSettings& game_settings)
+GameManager::GameManager(sf::RenderWindow& window, GameSettings* game_settings)
 	: window(window), game_settings(game_settings), current_state(GameState::in_main_menu) {
 }
 
 void GameManager::change_state(int state)
 {
+	//cout<<"Changing state to "<<state<<endl;
 	switch (state)
 	{
 	case 1:	current_state = in_main_menu;		break;
@@ -14,6 +15,7 @@ void GameManager::change_state(int state)
 	case 4:	current_state = in_achivements;		break;
 	case 5:	current_state = in_settings;		break;
 	case 6: current_state = in_game;			break;
+	case 7: current_state = in_generator_menu;	break;
 
 	default:
 		break;
@@ -61,6 +63,12 @@ void GameManager::run()
 		case GameState::in_game:
 		{
 			Game state(window, game_settings);
+			change_state(state.run());
+			break;
+		}
+		case GameState::in_generator_menu:
+		{
+			GameGeneratorMenu state(window, game_settings);
 			change_state(state.run());
 			break;
 		}

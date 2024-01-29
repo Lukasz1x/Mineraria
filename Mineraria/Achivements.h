@@ -10,14 +10,14 @@ class Achivements
 {
 private:
 	RenderWindow& window;
-	GameSettings& game_settings;
+	GameSettings* game_settings;
 	RectangleShape background;
 	Texture background_texture;
 	void load();
 public:
 
 
-	Achivements(RenderWindow& window, GameSettings& game_settings);
+	Achivements(RenderWindow& window, GameSettings* game_settings);
 	~Achivements() = default;
 
 	int run();

@@ -43,7 +43,8 @@ void Entity::updatePosition(int top, int down, int left, int right)
 	{
 		if (velocity.y > 100)
 		{
-			health -= velocity.y / 8;
+			health -= (((velocity.y-100) / 16) +((velocity.y-100)* (velocity.y - 100) )/128);
+			std::cout<<"damage: "<<(((velocity.y-100) / 16) + ((velocity.y - 100) * (velocity.y - 100)) / 128)<<std::endl;
 		}
 		velocity.y = 0;
 		//pos.y = down - entity.getGlobalBounds().height-1;

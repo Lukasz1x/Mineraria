@@ -10,14 +10,14 @@ class Settings
 {
 private:
 	RenderWindow& window;
-	GameSettings& game_settings;
+	GameSettings* game_settings;
 	RectangleShape background;
 	Texture background_texture;
 	void load();
 public:
 
 
-	Settings(RenderWindow& window, GameSettings& game_settings);
+	Settings(RenderWindow& window, GameSettings* game_settings);
 	~Settings() = default;
 
 	int run();

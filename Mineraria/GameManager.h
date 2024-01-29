@@ -8,6 +8,7 @@
 #include "Achivements.h"
 #include "Settings.h"
 #include "GameSettings.h"
+#include "GameGeneratorMenu.h"
 
 using namespace sf;
 
@@ -21,13 +22,14 @@ private:
 		in_achivements,
 		in_settings,
 		in_game,
+		in_generator_menu,
 	};
 	GameState current_state;
 	RenderWindow& window;
-	GameSettings& game_settings;
+	GameSettings* game_settings;
 	void change_state(int state);
 public:
-	GameManager(RenderWindow& window, GameSettings& game_settings);
+	GameManager(RenderWindow& window, GameSettings* game_settings);
 	~GameManager() = default;
 	void run();
 };

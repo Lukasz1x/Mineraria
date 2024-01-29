@@ -41,8 +41,16 @@ void Block::setTextture(Texture& texture)
 
 void Block::select()
 {
-	block.setOutlineThickness(-1);
-	block.setOutlineColor(Color(255, 0, 0));
+	//if (&block != nullptr)
+	//{
+		block.setOutlineThickness(-1);
+		block.setOutlineColor(Color(255, 0, 0));
+	//}
+	//else
+	//{
+	//	std::cerr << "Error: Block object is null." << std::endl;
+	//}
+
 }
 
 void Block::unselect()

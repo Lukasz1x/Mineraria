@@ -11,14 +11,14 @@ class MainMenu
 {
 private:
 	RenderWindow& window;
-	GameSettings& game_settings;
+	GameSettings* game_settings;
 	RectangleShape background;
 	Texture background_texture;
 	void load();
 public:
 	
 
-	MainMenu(RenderWindow& window, GameSettings& game_settings);
+	MainMenu(RenderWindow& window, GameSettings* game_settings);
 	~MainMenu() = default;
 
 	int run();

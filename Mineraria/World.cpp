@@ -1,7 +1,9 @@
 #include "World.h"
 
-World::World(string name, int seed)
+World::World(string name, int seed, string seed_hash)
 {
+	cout<< "world: "<<name<<endl;
+	cout << "seed: " << seed << endl;
 	world_name = name;
 	this->seed = seed;
 	ifstream file("assets/blocks.txt");
@@ -16,6 +18,9 @@ World::World(string name, int seed)
 	if (!std::filesystem::exists("saves/" + world_name))
 	{
 		std::filesystem::create_directory("saves/" + world_name);
+		ofstream file("saves/" + world_name + "/world_info.txt", ios::out);
+		file << seed_hash << endl;
+		file.close();
 		createNewWorld();
 	}
 	else
@@ -23,7 +28,6 @@ World::World(string name, int seed)
 		load(0);
 	}
 }
-
 	
 void World::createNewWorld()
 {

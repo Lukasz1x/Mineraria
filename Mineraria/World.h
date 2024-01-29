@@ -21,7 +21,7 @@ private:
 	int seed;
 	WorldGenerator generator;
 public:
-	World(string name, int seed);
+	World(string name, int seed, string seed_hash);
 	~World() = default;
 	void generate(Chunk& ch);
 	void save(Chunk& ch);

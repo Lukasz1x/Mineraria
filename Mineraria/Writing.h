@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 using namespace sf;
 
@@ -16,8 +17,11 @@ public:
 	void setOutline(Color color, int thickness);
 	void setOutline(Color color);
 	void setCharacterSize(int size);
+	void setColor(Color color);
+	void setString(std::string s);
 	int getCharacterSize();
 	int getOutlineThickness();
 	FloatRect getGlobalBounds();
+	std::string getString();
 };
 
