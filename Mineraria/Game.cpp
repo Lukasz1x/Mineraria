@@ -1,9 +1,6 @@
 #include "Game.h"
 
-Game::Game(RenderWindow& window, GameSettings* game_settings) : window(window), game_settings(game_settings) 
-{
-	player = new Player(game_settings);
-}
+Game::Game(RenderWindow& window, GameSettings* game_settings) : window(window), game_settings(game_settings)	{}
 
 void Game::load()
 {
@@ -267,12 +264,19 @@ int Game::run()
 	
 
 	World world(game_settings->world_name, game_settings->world_seed, game_settings->world_seed_unhashed);
+
+	player = new Player(game_settings);
+	player->setSpawnPoint(world.getSpawnPoint());
+	player->setPosition(world.getSpawnPoint());
+
 	thread load_thread(&Game::load_unload, this, ref(world));
 	load_thread.detach();
 	thread update_thread(&Game::update, this, ref(world));
 	update_thread.detach();
 	thread controls_thread(&Game::controls, this, ref(world));
 	controls_thread.detach();
+
+
 	
 
 	while (window.isOpen())

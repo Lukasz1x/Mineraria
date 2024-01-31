@@ -20,6 +20,7 @@ private:
 	string world_name;
 	int seed;
 	WorldGenerator generator;
+	Vector2f spawn_point=Vector2f(0,0);
 public:
 	World(string name, int seed, string seed_hash);
 	~World() = default;
@@ -33,6 +34,7 @@ public:
 	void unselectBlock(int x, int y);
 	short getBlockID(int x, int y);
 	void breakBlock(int x, int y);
+	Vector2f getSpawnPoint();
 	vector<Chunk>& getChunks();
 };
 

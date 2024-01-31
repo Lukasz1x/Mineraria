@@ -3,7 +3,6 @@
 Player::Player(GameSettings* gs)
 {
 	game_settings = gs;
-	entity.setPosition(0, 1856-22); //do zmiany
 	entity.setSize((Vector2f(13.0f, 22.0f)));
 	entity_texture.loadFromFile("assets/steve.png");
 	entity.setTexture(&entity_texture);
@@ -12,7 +11,6 @@ Player::Player(GameSettings* gs)
 	max_health = 100;
 	game_settings->dead = false;
 
-	//entity.setOrigin(Vector2f(7, 11));
 }
 
 Vector2f Player::getCenter()
@@ -45,8 +43,17 @@ void Player::update()
 
 void Player::respawn()
 {
-	entity.setPosition(0, 1856 - 22);
+	entity.setPosition(spawn_point.x, spawn_point.y-22);
 	health = max_health;
 	game_settings->dead = false;
 }
 
+void Player::setSpawnPoint(Vector2f spawn_point)
+{
+	this->spawn_point = spawn_point;
+}
+
+void Player::setPosition(Vector2f pos)
+{
+	entity.setPosition(Vector2f(pos.x, pos.y-22));
+}

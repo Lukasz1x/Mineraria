@@ -25,6 +25,10 @@ World::World(string name, int seed, string seed_hash)
 	}
 	else
 	{
+		ifstream file("saves/" + world_name + "/world_info.txt");
+		getline(file, seed_hash);
+		file >> spawn_point.x >> spawn_point.y;
+		file.close();
 		load(0);
 	}
 }
@@ -68,6 +72,21 @@ void World::createNewWorld()
 	{
 		setTextures(chunk);
 	}
+	ofstream file("saves/" + world_name + "/world_info.txt", ios::app);
+	for (auto& chunk : chunks)
+	{
+		if (chunk.getChunkX() == 0)
+		{
+			for(int i=319;i>0;i--)
+				if (chunk.getBlockID(0, i) != 0)
+				{
+					spawn_point.y = i * 16;
+				}
+		}
+	}
+	spawn_point.x = 0;
+	file << spawn_point.x << " " << spawn_point.y << endl;
+	file.close();
 }
 
 void World::generate(Chunk& ch)
@@ -150,9 +169,11 @@ void World::load(int chunk_x)
 				generate(chunks.back());
 			}
 			setTextures(chunks.back());
+			file.close();
 		}
 		
 	}
+	
 }
 
 void World::unload(int chunk_x)
@@ -258,4 +279,9 @@ void World::breakBlock(int x, int y)
 			chunk.breakBlock(x, y);
 		}
 	}
+}
+
+Vector2f World::getSpawnPoint()
+{
+	return spawn_point;
 }

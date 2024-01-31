@@ -34,6 +34,7 @@ public:
 
 
 	//zmienne do gry
+	bool game_paused = false;
 	bool dead = false;
 	int regeneration_delay = 10; //w sekundach
 

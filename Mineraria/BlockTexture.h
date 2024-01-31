@@ -7,7 +7,6 @@ using namespace std;
 
 class BlockTexture
 {
-private:
 	Texture texture;
 	int ID;
 public:

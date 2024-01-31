@@ -6,10 +6,12 @@ BlockTexture::BlockTexture(int ID, string file)
 	texture.loadFromFile("assets/textures/block/"+file);
 
 }
+
 Texture& BlockTexture::getTexture()
 {
 	return texture;
 }
+
 int BlockTexture::getID()
 {
 	return ID;

@@ -1,4 +1,6 @@
-﻿#include <SFML/Graphics.hpp>
+﻿//  v.0.1.3
+
+#include <SFML/Graphics.hpp>
 #include "GameManager.h"
 #include "GameSettings.h"
 

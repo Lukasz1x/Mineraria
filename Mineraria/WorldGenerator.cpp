@@ -7,8 +7,8 @@ void WorldGenerator::generate(Chunk& ch)
     FastNoiseLite myNoise;
     myNoise.SetSeed(ch.getSeed());
 
-    const int maxIron = 20;
-    const int maxCoal = 30;
+    const int maxIron = 15;
+    const int maxCoal = 25;
     const int maxGold = 5;
 
     // Tworzenie chunka

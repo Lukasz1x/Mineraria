@@ -14,5 +14,6 @@ public:
 	WorldGenerator();
 	~WorldGenerator() = default;
 	void generate(Chunk& ch);
+
 };
 
