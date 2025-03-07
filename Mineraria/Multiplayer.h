@@ -5,21 +5,22 @@
 #include "GameSettings.h"
 #include "GameManager.h"
 #include "Writing.h"
+#include "GameState.h"
 
 class Multiplayer
 {
 private:
-	RenderWindow& window;
-	GameSettings* game_settings;
+	shared_ptr<RenderWindow> window;
+	shared_ptr<GameSettings> game_settings;
 	RectangleShape background;
 	Texture background_texture;
 	void load();
 public:
 
 
-	Multiplayer(RenderWindow& window, GameSettings* game_settings);
+	Multiplayer(shared_ptr<RenderWindow> window, shared_ptr<GameSettings>game_settings);
 	~Multiplayer() = default;
 
-	int run(std::string& world_name);
+	GameState run(std::string& world_name);
 };
 

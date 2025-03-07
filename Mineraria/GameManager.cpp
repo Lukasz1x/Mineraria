@@ -1,31 +1,19 @@
 #include "GameManager.h"
 
-GameManager::GameManager(sf::RenderWindow& window, GameSettings* game_settings)
+GameManager::GameManager(shared_ptr<RenderWindow> window, shared_ptr<GameSettings>game_settings)
 	: window(window), game_settings(game_settings), current_state(GameState::in_main_menu) {
 }
 
-void GameManager::change_state(int state)
+void GameManager::change_state(GameState state)
 {
 	//cout<<"Changing state to "<<state<<endl;
-	switch (state)
-	{
-	case 1:	current_state = in_main_menu;		break;
-	case 2:	current_state = in_singleplayer;	break;
-	case 3:	current_state = in_multiplayer;		break;
-	case 4:	current_state = in_achivements;		break;
-	case 5:	current_state = in_settings;		break;
-	case 6: current_state = in_game;			break;
-	case 7: current_state = in_generator_menu;	break;
-
-	default:
-		break;
-	}
+	current_state = state;
 }
 
 void GameManager::run()
 {
 	string world_name;
-	while (window.isOpen())
+	while (window->isOpen())
 	{
 		switch (current_state)
 		{
@@ -48,7 +36,7 @@ void GameManager::run()
 			change_state(state.run(world_name));
 			break;
 		}
-		case GameState::in_achivements:
+		case GameState::in_achievements:
 		{
 			Achivements state(window, game_settings);
 			change_state(state.run());

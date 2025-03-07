@@ -1,6 +1,6 @@
 #include "MainMenu.h"
 
-MainMenu::MainMenu(RenderWindow& window, GameSettings* game_settings) : window(window), game_settings(game_settings) {}
+MainMenu::MainMenu(shared_ptr<RenderWindow> window, shared_ptr<GameSettings>game_settings) : window(window), game_settings(game_settings) {}
 
 void MainMenu::load()
 {
@@ -10,7 +10,7 @@ void MainMenu::load()
 	background.setPosition(0, 0);
 }
 
-int MainMenu::run()
+GameState MainMenu::run()
 {
 	load();
 	vector<Writing>texts;
@@ -30,26 +30,26 @@ int MainMenu::run()
 		texts[i].setOutline(Color(0, 0, 0), 0.01 * game_settings->getWindowHeight());
 	}
 	Event event;
-	window.pollEvent(event);
-	while (window.isOpen())
+	window->pollEvent(event);
+	while (window->isOpen())
 	{
 
-		while (window.pollEvent(event))
+		while (window->pollEvent(event))
 		{
 			if (event.type == Event::Closed)
 			{
-				window.close();
+				window->close();
 			}
 			else if ((event.type == Event::MouseButtonPressed) && (event.mouseButton.button == Mouse::Left))
 			{
 				for (int i = 1; i < 6; i++)
 				{
 					FloatRect textBounds = texts[i].getGlobalBounds();
-					if (textBounds.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+					if (textBounds.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 					{
 						if (i == 5)
-							window.close();
-						return i+1;
+							window->close();
+						return (GameState)(i+1);
 					}
 				}
 			}
@@ -58,7 +58,7 @@ int MainMenu::run()
 		for (int i = 1; i < 6; i++)
 		{
 			FloatRect textBounds = texts[i].getGlobalBounds();
-			if (textBounds.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+			if (textBounds.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 			{
 				texts[i].setOutline(Color(155, 155, 100));
 				texts[i].setCharacterSize(1.1 * 0.08 * game_settings->getWindowHeight());
@@ -70,12 +70,12 @@ int MainMenu::run()
 			}
 		}
 
-		window.clear();
-		window.draw(background);
+		window->clear();
+		window->draw(background);
 		for (auto& text : texts)
 		{
-			window.draw(text);
+			window->draw(text);
 		}
-		window.display();
+		window->display();
 	}
 }

@@ -1,6 +1,6 @@
 #include "GameGeneratorMenu.h"
 
-GameGeneratorMenu::GameGeneratorMenu(RenderWindow& window, GameSettings* game_settings) : window(window), game_settings(game_settings) {}
+GameGeneratorMenu::GameGeneratorMenu(shared_ptr<RenderWindow> window, shared_ptr<GameSettings>game_settings) : window(window), game_settings(game_settings) {}
 
 void GameGeneratorMenu::load()
 {
@@ -22,7 +22,7 @@ void GameGeneratorMenu::load()
 	text_box2.setFillColor(Color(0,0,0));
 }
 
-int GameGeneratorMenu::run()
+GameState GameGeneratorMenu::run()
 {
 	load();
 	vector<Writing>texts;
@@ -39,43 +39,43 @@ int GameGeneratorMenu::run()
 	{
 		texts[i].setOutline(Color(0, 0, 0), 0.01 * game_settings->getWindowHeight());
 	}
-	while (window.isOpen())
+	while (window->isOpen())
 	{
 		Event event;
-		while (window.pollEvent(event))
+		while (window->pollEvent(event))
 		{
 			if (event.type == Event::Closed)
-				window.close();
+				window->close();
 			else if ((event.type == Event::MouseButtonPressed) && (event.mouseButton.button == Mouse::Left))
 			{
 				for (int i = 2; i <= 3; i++)
 				{
 					FloatRect textBounds = texts[i].getGlobalBounds();
-					if (textBounds.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+					if (textBounds.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 					{
 						switch (i)
 						{
 						case 2:
 						{
 
-							return 2;
+							return (GameState)2;
 						}
 						case 3:
 						{
 							game_settings->setWorld(texts[0].getString(), texts[1].getString());
-							return 6;
+							return (GameState)6;
 						}
 						default:
 							break;
 						}
 					}
 				}
-				if (text_box1.getGlobalBounds().contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+				if (text_box1.getGlobalBounds().contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 				{
 					wn= true;
 					sn = false;
 				}
-				if (text_box2.getGlobalBounds().contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+				if (text_box2.getGlobalBounds().contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 				{
 					sn = true;
 					wn = false;
@@ -127,7 +127,7 @@ int GameGeneratorMenu::run()
 		for (int i = 2; i <= 3; i++)
 		{
 			FloatRect textBounds = texts[i].getGlobalBounds();
-			if (textBounds.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+			if (textBounds.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 			{
 				texts[i].setOutline(Color(155, 155, 100));
 				texts[i].setCharacterSize(1.1 * 0.08 * game_settings->getWindowHeight());
@@ -139,14 +139,14 @@ int GameGeneratorMenu::run()
 			}
 		}
 
-		window.clear();
-		window.draw(background);
-		window.draw(text_box1);
-		window.draw(text_box2);
+		window->clear();
+		window->draw(background);
+		window->draw(text_box1);
+		window->draw(text_box2);
 		for (auto& text : texts)
 		{
-			window.draw(text);
+			window->draw(text);
 		}
-		window.display();
+		window->display();
 	}
 }

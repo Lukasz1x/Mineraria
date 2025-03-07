@@ -16,9 +16,9 @@ private:
 	Writing* health_text, * respawn, * main_menu;
 	RectangleShape deduwa;
 	Texture deduwa_texture;
-	GameSettings* game_settings;
+	shared_ptr<GameSettings> game_settings;
 public:
-	Gui(GameSettings* gs);
+	Gui(shared_ptr<GameSettings> game_settings);
 	~Gui() = default;
 	void updateHealthbar(float h, float m);
 	void draw(RenderTarget& target, RenderStates state) const override;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "Game.h"
 #include "MainMenu.h"
 #include "Singleplayer.h"
@@ -10,26 +11,18 @@
 #include "GameSettings.h"
 #include "GameGeneratorMenu.h"
 
+
 using namespace sf;
 
 class GameManager
 {
 private:
-	enum GameState {
-		in_main_menu,
-		in_singleplayer,
-		in_multiplayer,
-		in_achivements,
-		in_settings,
-		in_game,
-		in_generator_menu,
-	};
 	GameState current_state;
-	RenderWindow& window;
-	GameSettings* game_settings;
-	void change_state(int state);
+	shared_ptr<RenderWindow> window;
+	shared_ptr<GameSettings> game_settings;
+	void change_state(GameState state);
 public:
-	GameManager(RenderWindow& window, GameSettings* game_settings);
+	GameManager(shared_ptr<RenderWindow> window, shared_ptr<GameSettings>game_settings);
 	~GameManager() = default;
 	void run();
 };

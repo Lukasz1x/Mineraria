@@ -44,7 +44,7 @@ void Block::select()
 	//if (&block != nullptr)
 	//{
 		block.setOutlineThickness(-1);
-		block.setOutlineColor(Color(255, 0, 0));
+     	block.setOutlineColor(Color(255, 0, 0));
 	//}
 	//else
 	//{

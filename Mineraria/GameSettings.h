@@ -2,13 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 #include <functional>
+#include <memory>
 #include "Writing.h"
 
 using namespace std;
 
 class GameSettings
 {
-private :
+private:
 	int window_width;
 	int window_height;
 	string window_title;
@@ -28,9 +29,8 @@ public:
 	string world_seed_unhashed;
 	int world_seed = 0;
 
-	//zmienne do w¹tków
-	bool draw = false;
-	bool wait_draw= false;
+	//sekcje krytyczne w¹tków
+	bool draw = true;
 
 
 	//zmienne do gry

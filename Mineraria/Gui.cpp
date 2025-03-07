@@ -1,8 +1,7 @@
 #include "Gui.h"
 
-Gui::Gui(GameSettings* gs)
+Gui::Gui(shared_ptr<GameSettings> game_settings) : game_settings(game_settings)
 {
-	game_settings = gs;
 	healthbar.setPosition(1060,20);
 	healthbar.setSize(Vector2f(204, 24));
 	healthbar.setFillColor(Color(255, 0, 0));

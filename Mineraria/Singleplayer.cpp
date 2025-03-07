@@ -1,6 +1,6 @@
 #include "Singleplayer.h"
 
-Singleplayer::Singleplayer(RenderWindow& window, GameSettings* game_settings) : window(window), game_settings(game_settings) {}
+Singleplayer::Singleplayer(shared_ptr<RenderWindow> window, shared_ptr<GameSettings>game_settings) : window(window), game_settings(game_settings) {}
 
 void Singleplayer::load()
 {
@@ -64,7 +64,7 @@ void Singleplayer::load()
 	}
 }
 
-int Singleplayer::run(std::string& world_name)
+GameState Singleplayer::run(std::string& world_name)
 {
 	load();
 	vector<Writing>texts;
@@ -82,29 +82,29 @@ int Singleplayer::run(std::string& world_name)
 	{
 		texts[i].setOutline(Color(0, 0, 0), 0.01 * game_settings->getWindowHeight());
 	}
-	while (window.isOpen())
+	while (window->isOpen())
 	{
 		Event event;
-		while (window.pollEvent(event))
+		while (window->pollEvent(event))
 		{
 			if (event.type == Event::Closed)
-				window.close();
+				window->close();
 			else if ((event.type == Event::MouseButtonPressed) && (event.mouseButton.button == Mouse::Left))
 			{
 				for (int i = 1; i < 3; i++)
 				{
 					FloatRect textBounds = texts[i].getGlobalBounds();
-					if (textBounds.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+					if (textBounds.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 					{
 						switch (i)
 						{
 						case 1:
 						{
-							return 1;
+							return (GameState)1;
 						}
 						case 2:
 						{
-							return 7;
+							return (GameState)7;
 						}
 						default:
 							break;
@@ -114,16 +114,16 @@ int Singleplayer::run(std::string& world_name)
 				for (auto& world : worlds)
 				{
 					FloatRect worldBounds = get<0>(world).getGlobalBounds();
-					if (worldBounds.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+					if (worldBounds.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 					{
 						game_settings->setWorld(get<1>(world).getString(), get<2>(world).getString());
-						return 6;
+						return (GameState)6;
 					}
 				}	
 			}
 			else if (event.type == sf::Event::MouseWheelMoved)
 			{
-				if (box.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+				if (box.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 				{
 					int move = 30*event.mouseWheel.delta;
 					if (get<0>(worlds[0]).getPosition().y + move <= y0 && get<0>(worlds[worlds.size() - 1]).getPosition().y + move >= y0)
@@ -142,7 +142,7 @@ int Singleplayer::run(std::string& world_name)
 		for (int i = 1; i < 3; i++)
 		{
 			FloatRect textBounds = texts[i].getGlobalBounds();
-			if (textBounds.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+			if (textBounds.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 			{
 				texts[i].setOutline(Color(155, 155, 100));
 				texts[i].setCharacterSize(1.1 * 0.08 * game_settings->getWindowHeight());
@@ -157,9 +157,9 @@ int Singleplayer::run(std::string& world_name)
 		for (auto& world : worlds)
 		{
 			FloatRect worldBounds = get<0>(world).getGlobalBounds();
-			if (box.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+			if (box.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 			{
-				if (worldBounds.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+				if (worldBounds.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 				{
 					get<0>(world).setOutlineColor(Color(155, 155, 100));
 				}
@@ -174,21 +174,21 @@ int Singleplayer::run(std::string& world_name)
 			}
 		}
 
-		window.clear();
-		window.setView(main_view);
-		window.draw(background);
+		window->clear();
+		window->setView(main_view);
+		window->draw(background);
 		for (auto& text : texts)
 		{
-			window.draw(text);
+			window->draw(text);
 		}
-		window.setView(view);
+		window->setView(view);
 		for (auto& world : worlds)
 		{
-			window.draw(get<0>(world));
-			window.draw(get<1>(world));
-			window.draw(get<2>(world));
+			window->draw(get<0>(world));
+			window->draw(get<1>(world));
+			window->draw(get<2>(world));
 		}
-		window.setView(main_view);
-		window.display();
+		window->setView(main_view);
+		window->display();
 	}
 }

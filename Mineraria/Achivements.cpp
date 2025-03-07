@@ -1,6 +1,6 @@
 #include "Achivements.h"
 
-Achivements::Achivements(RenderWindow& window, GameSettings* game_settings) : window(window), game_settings(game_settings) {}
+Achivements::Achivements(shared_ptr<RenderWindow> window, shared_ptr<GameSettings>game_settings) : window(window), game_settings(game_settings) {}
 
 void Achivements::load()
 {
@@ -10,7 +10,7 @@ void Achivements::load()
 	background.setPosition(0, 0);
 }
 
-int Achivements::run()
+GameState Achivements::run()
 {
 	load();
 	vector<Writing>texts;
@@ -24,26 +24,26 @@ int Achivements::run()
 	{
 		texts[i].setOutline(Color(0, 0, 0), 0.01 * game_settings->getWindowHeight());
 	}
-	while (window.isOpen())
+	while (window->isOpen())
 	{
 		Event event;
-		while (window.pollEvent(event))
+		while (window->pollEvent(event))
 		{
 			if (event.type == Event::Closed)
-				window.close();
+				window->close();
 			else if ((event.type == Event::MouseButtonPressed) && (event.mouseButton.button == Mouse::Left))
 			{
 				for (int i = 1; i < 3; i++)
 				{
 					FloatRect textBounds = texts[i].getGlobalBounds();
-					if (textBounds.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+					if (textBounds.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 					{
 						switch (i)
 						{
 						case 1:
 						{
 
-							return 1;
+							return GameState::in_main_menu;
 						}
 						case 2:
 						{
@@ -60,7 +60,7 @@ int Achivements::run()
 		for (int i = 1; i < 2; i++)
 		{
 			FloatRect textBounds = texts[i].getGlobalBounds();
-			if (textBounds.contains(static_cast<float>(Mouse::getPosition(window).x), static_cast<float>(Mouse::getPosition(window).y)))
+			if (textBounds.contains(static_cast<float>(Mouse::getPosition(*window).x), static_cast<float>(Mouse::getPosition(*window).y)))
 			{
 				texts[i].setOutline(Color(155, 155, 100));
 				texts[i].setCharacterSize(1.1 * 0.08 * game_settings->getWindowHeight());
@@ -72,12 +72,12 @@ int Achivements::run()
 			}
 		}
 
-		window.clear();
-		window.draw(background);
+		window->clear();
+		window->draw(background);
 		for (auto& text : texts)
 		{
-			window.draw(text);
+			window->draw(text);
 		}
-		window.display();
+		window->display();
 	}
 }

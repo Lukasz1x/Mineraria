@@ -1,8 +1,7 @@
 #include "Player.h"
 
-Player::Player(GameSettings* gs)
+Player::Player(shared_ptr<GameSettings> game_settings) : game_settings(game_settings)
 {
-	game_settings = gs;
 	entity.setSize((Vector2f(13.0f, 22.0f)));
 	entity_texture.loadFromFile("assets/steve.png");
 	entity.setTexture(&entity_texture);

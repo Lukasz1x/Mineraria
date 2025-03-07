@@ -7,13 +7,14 @@
 #include "GameSettings.h"
 #include "Writing.h"
 #include "World.h"
+#include "GameState.h"
 
 
 class Singleplayer
 {
 private:
-	RenderWindow& window;
-	GameSettings* game_settings;
+	shared_ptr<RenderWindow> window;
+	shared_ptr<GameSettings> game_settings;
 	RectangleShape background;
 	Texture background_texture;
 	void load();
@@ -24,9 +25,9 @@ private:
 public:
 
 
-	Singleplayer(RenderWindow& window, GameSettings* game_settings);
+	Singleplayer(shared_ptr<RenderWindow> window, shared_ptr<GameSettings>game_settings);
 	~Singleplayer() = default;
 
-	int run(std::string& world_name);
+	GameState run(std::string& world_name);
 };
 

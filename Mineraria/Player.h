@@ -8,12 +8,12 @@ class Player : public Entity
 {
 private:
 	Gui* gui;
-	GameSettings* game_settings;
+	shared_ptr<GameSettings> game_settings;
 	Vector2f spawn_point;
 
 
 public:
-	Player(GameSettings* gs);
+	Player(shared_ptr<GameSettings> game_settings);
 	~Player() = default;
 	void respawn();
 	Vector2f getCenter();

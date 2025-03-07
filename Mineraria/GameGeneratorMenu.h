@@ -5,12 +5,13 @@
 #include "GameManager.h"
 #include "Writing.h"
 #include <string>
+#include "GameState.h"
 
 class GameGeneratorMenu
 {
 private:
-	RenderWindow& window;
-	GameSettings* game_settings;
+	shared_ptr<RenderWindow> window;
+	shared_ptr<GameSettings> game_settings;
 	RectangleShape background;
 	Texture background_texture;
 	RectangleShape text_box1, text_box2;
@@ -19,8 +20,8 @@ private:
 public:
 
 
-	GameGeneratorMenu(RenderWindow& window, GameSettings* game_settings);
+	GameGeneratorMenu(shared_ptr<RenderWindow> window, shared_ptr<GameSettings>game_settings);
 	~GameGeneratorMenu() = default;
 
-	int run();
+	GameState run();
 };

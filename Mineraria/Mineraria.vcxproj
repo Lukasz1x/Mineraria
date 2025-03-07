@@ -165,6 +165,7 @@
     <ClInclude Include="GameGeneratorMenu.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameSettings.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Multiplayer.h" />

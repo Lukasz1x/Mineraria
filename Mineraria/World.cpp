@@ -134,7 +134,7 @@ void World::save(Chunk& ch)
 }
 void World::load(int chunk_x)
 {
-	for (int i = chunk_x - 10; i <= chunk_x + 10; i++)
+	for (int i = chunk_x - 10; i < chunk_x + 10; i++)
 	{
 		bool found = 0;
 		for (auto& chunk : chunks)
@@ -146,6 +146,7 @@ void World::load(int chunk_x)
 		}
 		if (!found)
 		{
+			cout<<"load : "<<i<<endl;
 			chunks.emplace_back(i, seed);
 			std::ifstream file("saves/" + world_name + "/" + to_string(i) + ".txt");
 
@@ -178,19 +179,22 @@ void World::load(int chunk_x)
 
 void World::unload(int chunk_x)
 {
-	for (auto it = chunks.begin(); it != chunks.end(); )
+	auto it = chunks.begin();
+	while (it != chunks.end())
 	{
-		if ((it->getChunkX() > chunk_x + 20) || (it->getChunkX() < chunk_x - 20))
+		if ((*it).getChunkX() > chunk_x + 20 || (*it).getChunkX() < chunk_x - 20)
 		{
 			save(*it);
-			it = chunks.erase(it);  // Usuñ obiekt i uzyskaj iterator do nastêpnego elementu
+			cout << "unload : " << (*it).getChunkX() << endl;
+			it = chunks.erase(it);  // Usuniêcie elementu i zwrócenie iteratora wskazuj¹cego na kolejny element
 		}
 		else
 		{
-			++it;  // PrzejdŸ do nastêpnego elementu
+			++it;
 		}
 	}
 }
+
 
 vector<Chunk>& World::getChunks()
 {
